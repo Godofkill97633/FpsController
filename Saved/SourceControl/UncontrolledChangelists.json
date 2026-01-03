@@ -1,0 +1,16 @@
+{
+	"version": 1,
+	"changelists": [
+		{
+			"guid": "00000000000000000000000000000000",
+			"description": "Default Uncontrolled Changelist",
+			"files": [
+				"C:/Users/ege19/OneDrive/Belgeler/Unreal Projects/FPSTest/Content/ThirdPerson/Blueprints/BP_ThirdPersonGameMode.uasset",
+				"C:/Users/ege19/OneDrive/Belgeler/Unreal Projects/FPSTest/Content/ThirdPerson/Blueprints/BP_FirstPersonCharacter.uasset",
+				"C:/Users/ege19/OneDrive/Belgeler/Unreal Projects/FPSTest/Content/ThirdPerson/Blueprints/BP_ThirdPersonCharacter.uasset",
+				"C:/Users/ege19/OneDrive/Belgeler/Unreal Projects/FPSTest/Content/Input/Actions/IA_Sprint.uasset",
+				"C:/Users/ege19/OneDrive/Belgeler/Unreal Projects/FPSTest/Content/Input/IMC_Default.uasset"
+			]
+		}
+	]
+}
