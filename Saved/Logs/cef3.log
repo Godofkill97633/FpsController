@@ -1,16 +1,27 @@
-[17204:24048:0103/171411.174:WARNING:chrome_main_delegate.cc(745)] This is Chrome version 128.0.6613.138 (not a warning)
-[17204:25184:0103/171411.211:ERROR:google_update_settings.cc(265)] Failed opening key Software\Chromium to set usagestats; result: 5
-[17204:24048:0103/171411.224:WARNING:account_consistency_mode_manager.cc(77)] Desktop Identity Consistency cannot be enabled as no OAuth client ID and client secret have been configured.
-[11940:17872:0103/171414.839:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -100
-[11940:17872:0103/171415.519:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -100
-[17204:24048:0103/171418.832:ERROR:device_event_log_impl.cc(196)] [17:14:18.500] USB: usb_service_win.cc:105 SetupDiGetDeviceProperty({{A45C254E-DF1C-4EFD-8020-67D146A850E0}, 6}) failed: Element not found. (0x490)
-[17204:22768:0103/171420.598:ERROR:cast_crl.cc(443)] CRL - Verification failed.
-[17204:22768:0103/171420.615:ERROR:cast_crl.cc(443)] CRL - Verification failed.
-[17204:22768:0103/171420.615:ERROR:cast_crl.cc(443)] CRL - Verification failed.
-[11940:17872:0103/171426.269:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -100
-[11940:17872:0103/171435.839:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -100
-[11940:17872:0103/183216.551:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -107
-[11940:17872:0103/183216.568:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -100
-[11940:17872:0103/183229.756:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -100
-[11940:17872:0103/183241.061:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -100
-[17204:24048:0103/190118.604:WARNING:pref_notifier_impl.cc(41)] Pref observer for media_router.cast_allow_all_ips found at shutdown.
+[7404:23764:0106/231842.940:WARNING:chrome_main_delegate.cc(745)] This is Chrome version 128.0.6613.138 (not a warning)
+[7404:12668:0106/231843.106:ERROR:google_update_settings.cc(265)] Failed opening key Software\Chromium to set usagestats; result: 5
+[7404:23764:0106/231843.184:WARNING:account_consistency_mode_manager.cc(77)] Desktop Identity Consistency cannot be enabled as no OAuth client ID and client secret have been configured.
+[20644:16456:0106/231848.090:WARNING:frame_impl.cc(430)] virtual CefFrameImpl::SendProcessMessage sent to detached frame 5-C5DFC2FC8C714FF1C556F40D78BC17DC will be ignored
+[7404:14748:0106/231850.092:WARNING:browser_info.cc(345)] Returning a speculative frame for [7,9]
+[7404:23764:0106/231850.423:WARNING:browser_info.cc(345)] Returning a speculative frame for [9,9]
+[7404:23764:0106/231850.423:WARNING:browser_info.cc(345)] Returning a speculative frame for [9,9]
+[7404:23764:0106/231850.424:WARNING:browser_info.cc(345)] Returning a speculative frame for [9,9]
+[7404:23764:0106/231850.424:WARNING:browser_info.cc(345)] Returning a speculative frame for [9,9]
+[7404:14748:0106/231850.429:WARNING:browser_info.cc(345)] Returning a speculative frame for [9,9]
+[14064:17112:0106/231850.759:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -100
+[14064:17112:0106/231850.764:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -100
+[14064:17112:0106/231851.429:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -100
+[14064:17112:0106/231851.430:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -100
+[7404:23764:0106/231852.087:ERROR:device_event_log_impl.cc(196)] [23:18:51.760] USB: usb_service_win.cc:105 SetupDiGetDeviceProperty({{A45C254E-DF1C-4EFD-8020-67D146A850E0}, 6}) failed: Element not found. (0x490)
+[7404:14748:0106/231853.861:ERROR:cast_crl.cc(443)] CRL - Verification failed.
+[7404:14748:0106/231854.781:ERROR:cast_crl.cc(443)] CRL - Verification failed.
+[7404:14748:0106/231855.518:ERROR:cast_crl.cc(443)] CRL - Verification failed.
+[14064:17112:0106/231900.761:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -100
+[14064:17112:0106/231901.761:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -107
+[14064:17112:0106/231909.428:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -100
+[14064:17112:0106/231912.095:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -100
+[14064:17112:0107/003932.635:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -100
+[14064:17112:0107/003933.301:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -100
+[14064:17112:0107/003948.303:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -100
+[14064:17112:0107/003958.559:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -107
+[7404:23764:0107/013622.232:WARNING:pref_notifier_impl.cc(41)] Pref observer for media_router.cast_allow_all_ips found at shutdown.

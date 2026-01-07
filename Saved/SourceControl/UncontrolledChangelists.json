@@ -5,15 +5,18 @@
 			"guid": "00000000000000000000000000000000",
 			"description": "Default Uncontrolled Changelist",
 			"files": [
-				"C:/Unreal Projects/FpsController/Content/Blueprints/BPI_Interactable.uasset",
-				"C:/Unreal Projects/FpsController/Content/Blueprints/BP_PickupBase.uasset",
 				"C:/Unreal Projects/FpsController/Content/ThirdPerson/Blueprints/BP_FirstPersonCharacter.uasset",
 				"C:/Unreal Projects/FpsController/Content/Inventory/Blueprints/BPI_Interactable.uasset",
 				"C:/Unreal Projects/FpsController/Content/Inventory/Blueprints/BP_PickupBase.uasset",
 				"C:/Unreal Projects/FpsController/Content/Inventory/TestData.uasset",
-				"C:/Unreal Projects/FpsController/Content/__ExternalActors__/ThirdPerson/Lvl_ThirdPerson/7/9A/OMEGUIHYCROB04ER0PI0W5.uasset",
 				"C:/Unreal Projects/FpsController/Content/LevelPrototyping/Meshes/SM_Cube1.uasset",
-				"C:/Unreal Projects/FpsController/Content/__ExternalActors__/ThirdPerson/Lvl_ThirdPerson/2/CO/M8O3UFM2H4ABV0OY8FM9H2.uasset"
+				"C:/Unreal Projects/FpsController/Content/__ExternalActors__/ThirdPerson/Lvl_ThirdPerson/2/CO/M8O3UFM2H4ABV0OY8FM9H2.uasset",
+				"C:/Unreal Projects/FpsController/Content/Inventory/Blueprints/BP_HeldItemBase.uasset",
+				"C:/Unreal Projects/FpsController/Content/Characters/Mannequins/Meshes/SKM_Quinn_Simple.uasset",
+				"C:/Unreal Projects/FpsController/Content/Characters/Mannequins/Meshes/SK_Mannequin.uasset",
+				"C:/Unreal Projects/FpsController/Content/Blueprints/BPI_Interactable.uasset",
+				"C:/Unreal Projects/FpsController/Content/Blueprints/BP_PickupBase.uasset",
+				"C:/Unreal Projects/FpsController/Content/__ExternalActors__/ThirdPerson/Lvl_ThirdPerson/7/9A/OMEGUIHYCROB04ER0PI0W5.uasset"
 			]
 		}
 	]
