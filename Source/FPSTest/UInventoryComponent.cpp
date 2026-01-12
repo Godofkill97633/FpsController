@@ -16,6 +16,7 @@ void UInventoryComponent::TryPickupItem(UItemData* NewItem)
     if (RightHand.IsEmpty())
     {
         RightHand.ContainedItem = NewItem;
+        OnInventoryUpdated.Broadcast();
         return;
     }
 
@@ -23,6 +24,7 @@ void UInventoryComponent::TryPickupItem(UItemData* NewItem)
     if (LeftHand.IsEmpty())
     {
         LeftHand.ContainedItem = NewItem;
+        OnInventoryUpdated.Broadcast();
         return;
     }
 
@@ -32,12 +34,13 @@ void UInventoryComponent::TryPickupItem(UItemData* NewItem)
     {
         ToolbeltSlots[EmptyBeltIndex].ContainedItem = RightHand.ContainedItem;
         RightHand.ContainedItem = NewItem;
+        OnInventoryUpdated.Broadcast();
         return;
     }
 
     // RULE: If belt is also full, drop Right Hand item and pick up new
-    // Note: In Blueprints, you will trigger an 'OnItemDropped' event to spawn the physical actor
     RightHand.ContainedItem = NewItem;
+    OnInventoryUpdated.Broadcast();
 }
 
 void UInventoryComponent::SwapHandWithBelt(int32 BeltIndex)
@@ -49,8 +52,7 @@ void UInventoryComponent::SwapHandWithBelt(int32 BeltIndex)
     RightHand.ContainedItem = ToolbeltSlots[BeltIndex].ContainedItem;
     ToolbeltSlots[BeltIndex].ContainedItem = ItemInHand;
 
-    // Logic: If we pulled out a weapon, it should favor Right Hand
-    // (Additional logic for hand priority can be added here)
+    OnInventoryUpdated.Broadcast();
 }
 
 int32 UInventoryComponent::GetFirstEmptyBeltSlot() const
@@ -69,4 +71,6 @@ void UInventoryComponent::ToggleHolster(bool bIsPrimary)
     UItemData* Temp = RightHand.ContainedItem;
     RightHand.ContainedItem = TargetHolster.ContainedItem;
     TargetHolster.ContainedItem = Temp;
+
+    OnInventoryUpdated.Broadcast();
 }

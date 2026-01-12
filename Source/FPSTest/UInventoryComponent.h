@@ -7,6 +7,9 @@
 #include "UItemData.h"
 #include "UInventoryComponent.generated.h"
 
+// Delegate declaration - must be before the class that uses it
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInventoryUpdatedDelegate);
+
 // Define a slot to hold an item
 USTRUCT(BlueprintType)
 struct FPSTEST_API FInventorySlot
@@ -42,6 +45,12 @@ public:
 
     UPROPERTY(BlueprintReadWrite, Category = "Inventory|Belt")
     TArray<FInventorySlot> ToolbeltSlots; // Keys 3-0
+
+    // --- EVENTS ---
+
+    /** Called whenever inventory data changes. Bind to this in Blueprints to refresh visuals. */
+    UPROPERTY(BlueprintAssignable, Category = "Inventory")
+    FOnInventoryUpdatedDelegate OnInventoryUpdated;
 
     // --- FUNCTIONS ---
 
