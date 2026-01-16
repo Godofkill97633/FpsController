@@ -28,13 +28,14 @@ class FPSTEST_API UInventoryComponent : public UActorComponent
 public:
     UInventoryComponent();
 
-    // --- SLOTS ---
+    // --- HAND SLOTS ---
     UPROPERTY(BlueprintReadWrite, Category = "Inventory|Hands")
     FInventorySlot RightHand;
 
     UPROPERTY(BlueprintReadWrite, Category = "Inventory|Hands")
     FInventorySlot LeftHand;
 
+    // --- STORAGE SLOTS ---
     UPROPERTY(BlueprintReadWrite, Category = "Inventory|Holsters")
     FInventorySlot PrimaryHolster;
 
@@ -44,31 +45,33 @@ public:
     UPROPERTY(BlueprintReadWrite, Category = "Inventory|Belt")
     TArray<FInventorySlot> ToolbeltSlots;
 
+    /** Placeholder for future Backpack implementation */
+    UPROPERTY(BlueprintReadWrite, Category = "Inventory|Backpack")
+    FInventorySlot BackpackSlot;
+
     // --- EVENTS ---
     UPROPERTY(BlueprintAssignable, Category = "Inventory")
     FOnInventoryUpdated OnInventoryUpdated;
 
     // --- FUNCTIONS ---
 
-    /** * Handles contextual pickup logic.
-     * Weapons default to Right Hand. Tools/Consumables default to Left Hand.
-     * @param bAltPressed If true, flips the priority (Weapon to Left, Tool to Right).
+    /** * Contextual Pickup: Weapons prefer Right, Tools prefer Left.
+     * Enforces storage rules: Weapons to Holsters, Tools to Belt.
      */
     UFUNCTION(BlueprintCallable, Category = "Inventory")
     void TryPickupItem(UItemData* NewItem, bool bAltPressed);
 
-    /** * Handles holstering with contextual priority.
-     * Default: Holsters from Left Hand first.
-     * @param bAltPressed If true, flips priority to holster from Right Hand first.
-     */
+    /** Only allows Weapons to be holstered. */
     UFUNCTION(BlueprintCallable, Category = "Inventory")
     void ToggleHolster(bool bIsPrimary, bool bAltPressed);
 
+    /** Swaps hand item with belt (restricted to non-weapon items). */
     UFUNCTION(BlueprintCallable, Category = "Inventory")
     void SwapHandWithBelt(int32 BeltIndex, bool bAltPressed);
 
 protected:
-    /** Helper to move an item from hand to the first available belt slot */
+    /** Smart Stow: Automatically finds the correct home (Holster vs Belt) for an item */
     bool TryStowItem(UItemData* ItemToStow);
     int32 GetFirstEmptyBeltSlot() const;
+    bool HasEmptyWeaponHolster() const;
 };

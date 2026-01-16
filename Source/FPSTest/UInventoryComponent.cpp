@@ -12,35 +12,27 @@ void UInventoryComponent::TryPickupItem(UItemData* NewItem, bool bAltPressed)
 {
     if (!NewItem) return;
 
-    // RULE 1: Determine Hand Priority based on Item Type
-    bool bWeapon = (NewItem->ItemType == EItemType::Weapon);
+    // 1. Determine Default Hand Priority
+    // Weapons -> Right (true), Everything else -> Left (false)
+    bool bTargetRight = (NewItem->ItemType == EItemType::Weapon);
 
-    // Default: Weapons -> Right (true), Non-Weapons -> Left (false)
-    bool bTargetRight = bWeapon;
-
-    // RULE 2: Manual Override via Alt
+    // 2. Apply Alt Override
     if (bAltPressed) bTargetRight = !bTargetRight;
 
-    FInventorySlot& PrimarySlot = bTargetRight ? RightHand : LeftHand;
-    FInventorySlot& SecondarySlot = bTargetRight ? LeftHand : RightHand;
+    FInventorySlot& TargetHand = bTargetRight ? RightHand : LeftHand;
 
-    // 1. Try Priority Hand
-    if (PrimarySlot.IsEmpty())
+    // 3. If the hand is full, try to STOW the current item to its valid home
+    if (!TargetHand.IsEmpty())
     {
-        PrimarySlot.ContainedItem = NewItem;
-    }
-    // 2. Try Secondary Hand
-    else if (SecondarySlot.IsEmpty())
-    {
-        SecondarySlot.ContainedItem = NewItem;
-    }
-    // 3. Both full: Stow the prioritized hand's item and take new one
-    else
-    {
-        TryStowItem(PrimarySlot.ContainedItem);
-        PrimarySlot.ContainedItem = NewItem;
+        // Try to find a place for the item currently in hand
+        bool bStowed = TryStowItem(TargetHand.ContainedItem);
+
+        // If we couldn't stow it (full inventory), we overwrite it (effectively dropping/replacing it)
+        TargetHand.ContainedItem = nullptr;
     }
 
+    // 4. Place new item in hand
+    TargetHand.ContainedItem = NewItem;
     OnInventoryUpdated.Broadcast();
 }
 
@@ -48,14 +40,15 @@ void UInventoryComponent::ToggleHolster(bool bIsPrimary, bool bAltPressed)
 {
     FInventorySlot& TargetHolster = bIsPrimary ? PrimaryHolster : SidearmHolster;
 
-    // LOGIC: PUTTING AWAY (Holstering)
+    // CASE: Putting away a weapon
     if (TargetHolster.IsEmpty())
     {
-        // Default priority: Left hand first (to keep right hand weapon active)
+        // Prioritize Left hand for holstering (keep right hand free), unless Alt is held
         bool bCheckLeftFirst = !bAltPressed;
         FInventorySlot& PriorityHand = bCheckLeftFirst ? LeftHand : RightHand;
         FInventorySlot& SecondaryHand = bCheckLeftFirst ? RightHand : LeftHand;
 
+        // ONLY allow items classified as Weapons to enter holsters
         if (!PriorityHand.IsEmpty() && PriorityHand.ContainedItem->ItemType == EItemType::Weapon)
         {
             TargetHolster.ContainedItem = PriorityHand.ContainedItem;
@@ -67,13 +60,14 @@ void UInventoryComponent::ToggleHolster(bool bIsPrimary, bool bAltPressed)
             SecondaryHand.ContainedItem = nullptr;
         }
     }
-    // LOGIC: TAKING OUT (Unholstering)
+    // CASE: Drawing a weapon
     else
     {
-        // Weapons unholster to Right hand by default unless Alt is held
+        // Weapons draw to Right hand by default unless Alt is held
         bool bTargetRight = !bAltPressed;
         FInventorySlot& TargetHand = bTargetRight ? RightHand : LeftHand;
 
+        // If hand is full, stow it before drawing weapon
         if (!TargetHand.IsEmpty())
         {
             TryStowItem(TargetHand.ContainedItem);
@@ -86,31 +80,50 @@ void UInventoryComponent::ToggleHolster(bool bIsPrimary, bool bAltPressed)
     OnInventoryUpdated.Broadcast();
 }
 
+bool UInventoryComponent::TryStowItem(UItemData* ItemToStow)
+{
+    if (!ItemToStow) return false;
+
+    // RULE: Weapons go to Holsters
+    if (ItemToStow->ItemType == EItemType::Weapon)
+    {
+        if (PrimaryHolster.IsEmpty()) { PrimaryHolster.ContainedItem = ItemToStow; return true; }
+        if (SidearmHolster.IsEmpty()) { SidearmHolster.ContainedItem = ItemToStow; return true; }
+    }
+    // RULE: Tools/Consumables go to Belt
+    else
+    {
+        int32 Slot = GetFirstEmptyBeltSlot();
+        if (Slot != INDEX_NONE)
+        {
+            ToolbeltSlots[Slot].ContainedItem = ItemToStow;
+            return true;
+        }
+    }
+
+    return false; // Nowhere to put it!
+}
+
 void UInventoryComponent::SwapHandWithBelt(int32 BeltIndex, bool bAltPressed)
 {
     if (!ToolbeltSlots.IsValidIndex(BeltIndex)) return;
 
-    // Belt items go to Left Hand unless Alt is held
-    bool bUseRightHand = bAltPressed;
-    FInventorySlot& TargetHand = bUseRightHand ? RightHand : LeftHand;
+    // Items from belt prefer Left Hand unless Alt is held
+    FInventorySlot& TargetHand = bAltPressed ? RightHand : LeftHand;
+
+    // Strict Rule: Don't let a weapon accidentally be swapped into the belt via this function
+    if (!TargetHand.IsEmpty() && TargetHand.ContainedItem->ItemType == EItemType::Weapon)
+    {
+        // If right hand has a weapon, we must stow the weapon properly first
+        TryStowItem(TargetHand.ContainedItem);
+        TargetHand.ContainedItem = nullptr;
+    }
 
     UItemData* Temp = TargetHand.ContainedItem;
     TargetHand.ContainedItem = ToolbeltSlots[BeltIndex].ContainedItem;
     ToolbeltSlots[BeltIndex].ContainedItem = Temp;
 
     OnInventoryUpdated.Broadcast();
-}
-
-bool UInventoryComponent::TryStowItem(UItemData* ItemToStow)
-{
-    if (!ItemToStow) return false;
-    int32 SlotIndex = GetFirstEmptyBeltSlot();
-    if (SlotIndex != INDEX_NONE)
-    {
-        ToolbeltSlots[SlotIndex].ContainedItem = ItemToStow;
-        return true;
-    }
-    return false; // Belt is full!
 }
 
 int32 UInventoryComponent::GetFirstEmptyBeltSlot() const
@@ -120,4 +133,9 @@ int32 UInventoryComponent::GetFirstEmptyBeltSlot() const
         if (ToolbeltSlots[i].IsEmpty()) return i;
     }
     return INDEX_NONE;
+}
+
+bool UInventoryComponent::HasEmptyWeaponHolster() const
+{
+    return PrimaryHolster.IsEmpty() || SidearmHolster.IsEmpty();
 }

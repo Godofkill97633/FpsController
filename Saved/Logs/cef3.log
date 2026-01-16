@@ -1,7 +1,13 @@
-[14804:16584:0115/233134.760:WARNING:chrome_main_delegate.cc(745)] This is Chrome version 128.0.6613.138 (not a warning)
-[14804:24348:0115/233134.784:ERROR:google_update_settings.cc(265)] Failed opening key Software\Chromium to set usagestats; result: 5
-[14804:16584:0115/233134.798:WARNING:account_consistency_mode_manager.cc(77)] Desktop Identity Consistency cannot be enabled as no OAuth client ID and client secret have been configured.
-[12588:20700:0115/233137.516:WARNING:frame_impl.cc(430)] virtual CefFrameImpl::SendProcessMessage sent to detached frame 5-F2D9A21C1C2033800DC92F9AB5E603C4 will be ignored
-[16396:12956:0115/233137.886:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -100
-[16396:12956:0115/233137.903:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -100
-[14804:16584:0115/233139.272:WARNING:pref_notifier_impl.cc(41)] Pref observer for media_router.cast_allow_all_ips found at shutdown.
+[23032:13260:0115/233936.481:WARNING:chrome_main_delegate.cc(745)] This is Chrome version 128.0.6613.138 (not a warning)
+[23032:20748:0115/233936.506:ERROR:google_update_settings.cc(265)] Failed opening key Software\Chromium to set usagestats; result: 5
+[23032:13260:0115/233936.522:WARNING:account_consistency_mode_manager.cc(77)] Desktop Identity Consistency cannot be enabled as no OAuth client ID and client secret have been configured.
+[18756:18436:0115/233939.704:WARNING:frame_impl.cc(430)] virtual CefFrameImpl::SendProcessMessage sent to detached frame 5-6CB911F7EA837F2B5269588DEA40FE01 will be ignored
+[14200:21040:0115/233940.043:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -100
+[14200:21040:0115/233940.810:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -107
+[23032:13260:0115/233943.036:ERROR:device_event_log_impl.cc(196)] [23:39:42.705] USB: usb_service_win.cc:105 SetupDiGetDeviceProperty({{A45C254E-DF1C-4EFD-8020-67D146A850E0}, 6}) failed: Element not found. (0x490)
+[23032:24320:0115/233944.134:ERROR:cast_crl.cc(443)] CRL - Verification failed.
+[23032:24320:0115/233945.803:ERROR:cast_crl.cc(443)] CRL - Verification failed.
+[23032:24320:0115/233947.726:ERROR:cast_crl.cc(443)] CRL - Verification failed.
+[14200:21040:0115/233953.005:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -107
+[14200:21040:0115/234002.432:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -100
+[23032:13260:0115/234958.202:WARNING:pref_notifier_impl.cc(41)] Pref observer for media_router.cast_allow_all_ips found at shutdown.
