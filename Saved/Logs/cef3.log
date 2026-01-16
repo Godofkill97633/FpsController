@@ -1,13 +1,7 @@
-[13356:14360:0115/225749.226:WARNING:chrome_main_delegate.cc(745)] This is Chrome version 128.0.6613.138 (not a warning)
-[13356:14120:0115/225749.248:ERROR:google_update_settings.cc(265)] Failed opening key Software\Chromium to set usagestats; result: 5
-[13356:14360:0115/225749.267:WARNING:account_consistency_mode_manager.cc(77)] Desktop Identity Consistency cannot be enabled as no OAuth client ID and client secret have been configured.
-[24116:25540:0115/225752.030:WARNING:frame_impl.cc(430)] virtual CefFrameImpl::SendProcessMessage sent to detached frame 5-416A774B21BFDB2BB17942F60C5656D8 will be ignored
-[21688:8948:0115/225752.293:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -100
-[21688:8948:0115/225752.315:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -107
-[13356:14360:0115/225755.111:ERROR:device_event_log_impl.cc(196)] [22:57:55.103] USB: usb_service_win.cc:105 SetupDiGetDeviceProperty({{A45C254E-DF1C-4EFD-8020-67D146A850E0}, 6}) failed: Element not found. (0x490)
-[13356:23212:0115/225756.388:ERROR:cast_crl.cc(443)] CRL - Verification failed.
-[13356:23212:0115/225756.422:ERROR:cast_crl.cc(443)] CRL - Verification failed.
-[13356:23212:0115/225756.422:ERROR:cast_crl.cc(443)] CRL - Verification failed.
-[21688:8948:0115/225803.111:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -100
-[21688:8948:0115/225812.635:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -100
-[13356:14360:0115/225847.537:WARNING:pref_notifier_impl.cc(41)] Pref observer for media_router.cast_allow_all_ips found at shutdown.
+[14804:16584:0115/233134.760:WARNING:chrome_main_delegate.cc(745)] This is Chrome version 128.0.6613.138 (not a warning)
+[14804:24348:0115/233134.784:ERROR:google_update_settings.cc(265)] Failed opening key Software\Chromium to set usagestats; result: 5
+[14804:16584:0115/233134.798:WARNING:account_consistency_mode_manager.cc(77)] Desktop Identity Consistency cannot be enabled as no OAuth client ID and client secret have been configured.
+[12588:20700:0115/233137.516:WARNING:frame_impl.cc(430)] virtual CefFrameImpl::SendProcessMessage sent to detached frame 5-F2D9A21C1C2033800DC92F9AB5E603C4 will be ignored
+[16396:12956:0115/233137.886:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -100
+[16396:12956:0115/233137.903:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -100
+[14804:16584:0115/233139.272:WARNING:pref_notifier_impl.cc(41)] Pref observer for media_router.cast_allow_all_ips found at shutdown.

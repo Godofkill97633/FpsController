@@ -7,10 +7,8 @@
 #include "UItemData.h"
 #include "UInventoryComponent.generated.h"
 
-// Delegate declaration - must be before the class that uses it
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInventoryUpdatedDelegate);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInventoryUpdated);
 
-// Define a slot to hold an item
 USTRUCT(BlueprintType)
 struct FPSTEST_API FInventorySlot
 {
@@ -38,35 +36,39 @@ public:
     FInventorySlot LeftHand;
 
     UPROPERTY(BlueprintReadWrite, Category = "Inventory|Holsters")
-    FInventorySlot PrimaryHolster; // Key 1
+    FInventorySlot PrimaryHolster;
 
     UPROPERTY(BlueprintReadWrite, Category = "Inventory|Holsters")
-    FInventorySlot SidearmHolster; // Key 2
+    FInventorySlot SidearmHolster;
 
     UPROPERTY(BlueprintReadWrite, Category = "Inventory|Belt")
-    TArray<FInventorySlot> ToolbeltSlots; // Keys 3-0
+    TArray<FInventorySlot> ToolbeltSlots;
 
     // --- EVENTS ---
-
-    /** Called whenever inventory data changes. Bind to this in Blueprints to refresh visuals. */
     UPROPERTY(BlueprintAssignable, Category = "Inventory")
-    FOnInventoryUpdatedDelegate OnInventoryUpdated;
+    FOnInventoryUpdated OnInventoryUpdated;
 
     // --- FUNCTIONS ---
 
-    /** Logic for picking up an item from the ground (F Key) */
+    /** * Handles contextual pickup logic.
+     * Weapons default to Right Hand. Tools/Consumables default to Left Hand.
+     * @param bAltPressed If true, flips the priority (Weapon to Left, Tool to Right).
+     */
     UFUNCTION(BlueprintCallable, Category = "Inventory")
-    void TryPickupItem(UItemData* NewItem);
+    void TryPickupItem(UItemData* NewItem, bool bAltPressed);
 
-    /** Logic for swapping hand with a toolbelt slot (Keys 3-0) */
+    /** * Handles holstering with contextual priority.
+     * Default: Holsters from Left Hand first.
+     * @param bAltPressed If true, flips priority to holster from Right Hand first.
+     */
     UFUNCTION(BlueprintCallable, Category = "Inventory")
-    void SwapHandWithBelt(int32 BeltIndex);
+    void ToggleHolster(bool bIsPrimary, bool bAltPressed);
 
-    /** Logic for holstering weapon (Keys 1-2) */
     UFUNCTION(BlueprintCallable, Category = "Inventory")
-    void ToggleHolster(bool bIsPrimary);
+    void SwapHandWithBelt(int32 BeltIndex, bool bAltPressed);
 
 protected:
-    // Helper to find empty belt space
+    /** Helper to move an item from hand to the first available belt slot */
+    bool TryStowItem(UItemData* ItemToStow);
     int32 GetFirstEmptyBeltSlot() const;
 };
