@@ -7,6 +7,9 @@
 #include "UItemData.h"
 #include "UInventoryComponent.generated.h"
 
+// Forward declaration of our new component
+class UBackpackComponent;
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInventoryUpdated);
 
 USTRUCT(BlueprintType)
@@ -45,7 +48,7 @@ public:
     UPROPERTY(BlueprintReadWrite, Category = "Inventory|Belt")
     TArray<FInventorySlot> ToolbeltSlots;
 
-    /** Placeholder for future Backpack implementation */
+    /** This holds the 'Backpack Item' itself */
     UPROPERTY(BlueprintReadWrite, Category = "Inventory|Backpack")
     FInventorySlot BackpackSlot;
 
@@ -54,6 +57,14 @@ public:
     FOnInventoryUpdated OnInventoryUpdated;
 
     // --- FUNCTIONS ---
+
+    /** Swaps whatever is in the Left hand with the Right hand (X Key) */
+    UFUNCTION(BlueprintCallable, Category = "Inventory")
+    void SwapHands();
+
+    /** Stows the item in the free hand into the held backpack (R Key) */
+    UFUNCTION(BlueprintCallable, Category = "Inventory")
+    void QuickStowToBackpack(UBackpackComponent* ActiveBackpack);
 
     /** * Contextual Pickup: Weapons prefer Right, Tools prefer Left.
      * Enforces storage rules: Weapons to Holsters, Tools to Belt.

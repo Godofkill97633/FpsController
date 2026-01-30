@@ -1,11 +1,48 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "UInventoryComponent.h"
+#include "UBackpackComponent.h"
 
 UInventoryComponent::UInventoryComponent()
 {
     PrimaryComponentTick.bCanEverTick = false;
     ToolbeltSlots.SetNum(4);
+}
+
+void UInventoryComponent::SwapHands()
+{
+    UItemData* Temp = LeftHand.ContainedItem;
+    LeftHand.ContainedItem = RightHand.ContainedItem;
+    RightHand.ContainedItem = Temp;
+
+    OnInventoryUpdated.Broadcast();
+}
+
+void UInventoryComponent::QuickStowToBackpack(UBackpackComponent* ActiveBackpack)
+{
+    if (!ActiveBackpack) return;
+
+    // 1. Identify which hand has the backpack and which has the item
+    FInventorySlot* ItemSlot = nullptr;
+
+    if (RightHand.ContainedItem && RightHand.ContainedItem->ItemType == EItemType::Backpack)
+    {
+        ItemSlot = &LeftHand;
+    }
+    else if (LeftHand.ContainedItem && LeftHand.ContainedItem->ItemType == EItemType::Backpack)
+    {
+        ItemSlot = &RightHand;
+    }
+
+    // 2. If we found an item hand, try to move it to the backpack
+    if (ItemSlot && !ItemSlot->IsEmpty())
+    {
+        if (ActiveBackpack->TryAddItem(ItemSlot->ContainedItem))
+        {
+            ItemSlot->ContainedItem = nullptr;
+            OnInventoryUpdated.Broadcast();
+        }
+    }
 }
 
 void UInventoryComponent::TryPickupItem(UItemData* NewItem, bool bAltPressed)

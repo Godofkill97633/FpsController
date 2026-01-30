@@ -58,6 +58,12 @@ public:
     TSubclassOf<AActor> HeldActorClass; 
 
     // --- STATS ---
+
+    /** Weight in KG */
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stats")
-    float Weight;
+    float Weight = 0.0f;
+
+    /** Physical size (1 = Small, 5 = Huge). Backpacks have a MaxItemSize limit. */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stats")
+    int32 ItemSize = 1;
 };
