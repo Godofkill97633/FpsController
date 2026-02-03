@@ -1,17 +1,13 @@
-[7984:12016:0129/184239.236:WARNING:chrome_main_delegate.cc(745)] This is Chrome version 128.0.6613.138 (not a warning)
-[7984:26568:0129/184239.463:ERROR:google_update_settings.cc(265)] Failed opening key Software\Chromium to set usagestats; result: 5
-[7984:12016:0129/184239.531:WARNING:account_consistency_mode_manager.cc(77)] Desktop Identity Consistency cannot be enabled as no OAuth client ID and client secret have been configured.
-[7984:12016:0129/184245.842:ERROR:device_event_log_impl.cc(196)] [18:42:45.516] USB: usb_service_win.cc:105 SetupDiGetDeviceProperty({{A45C254E-DF1C-4EFD-8020-67D146A850E0}, 6}) failed: Element not found. (0x490)
-[21796:2768:0129/184247.177:WARNING:frame_impl.cc(430)] virtual CefFrameImpl::SendProcessMessage sent to detached frame 5-5378D3B971247777D917F7CB8F27AD40 will be ignored
-[7984:26584:0129/184247.625:ERROR:cast_crl.cc(443)] CRL - Verification failed.
-[7984:26584:0129/184248.026:ERROR:cast_crl.cc(443)] CRL - Verification failed.
-[25684:25680:0129/184248.520:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -100
-[25684:25680:0129/184249.232:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -100
-[7984:26584:0129/184249.549:ERROR:cast_crl.cc(443)] CRL - Verification failed.
-[25684:25680:0129/184302.181:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -100
-[25684:25680:0129/184315.704:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -107
-[25684:25680:0129/190056.241:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -100
-[25684:25680:0129/190056.281:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -100
-[25684:25680:0129/190104.188:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -100
-[25684:25680:0129/190117.506:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -107
-[7984:12016:0129/202851.161:WARNING:pref_notifier_impl.cc(41)] Pref observer for media_router.cast_allow_all_ips found at shutdown.
+[13984:23672:0203/005143.770:WARNING:chrome_main_delegate.cc(745)] This is Chrome version 128.0.6613.138 (not a warning)
+[13984:10116:0203/005143.796:ERROR:google_update_settings.cc(265)] Failed opening key Software\Chromium to set usagestats; result: 5
+[13984:23672:0203/005143.810:WARNING:account_consistency_mode_manager.cc(77)] Desktop Identity Consistency cannot be enabled as no OAuth client ID and client secret have been configured.
+[11760:26928:0203/005145.732:WARNING:frame_impl.cc(430)] virtual CefFrameImpl::SendProcessMessage sent to detached frame 5-22A98A8C6830C299F7677A7BB1558742 will be ignored
+[22208:19132:0203/005146.845:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -100
+[22208:19132:0203/005146.860:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -100
+[13984:23672:0203/005147.761:ERROR:device_event_log_impl.cc(196)] [00:51:47.756] USB: usb_service_win.cc:105 SetupDiGetDeviceProperty({{A45C254E-DF1C-4EFD-8020-67D146A850E0}, 6}) failed: Element not found. (0x490)
+[13984:9500:0203/005149.147:ERROR:cast_crl.cc(443)] CRL - Verification failed.
+[13984:9500:0203/005149.147:ERROR:cast_crl.cc(443)] CRL - Verification failed.
+[13984:9500:0203/005149.151:ERROR:cast_crl.cc(443)] CRL - Verification failed.
+[22208:19132:0203/005159.861:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -100
+[22208:19132:0203/005208.595:ERROR:ssl_client_socket_impl.cc(882)] handshake failed; returned -1, SSL error code 1, net_error -100
+[13984:23672:0203/011040.667:WARNING:pref_notifier_impl.cc(41)] Pref observer for media_router.cast_allow_all_ips found at shutdown.

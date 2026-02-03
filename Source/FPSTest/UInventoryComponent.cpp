@@ -18,11 +18,114 @@ void UInventoryComponent::SwapHands()
     OnInventoryUpdated.Broadcast();
 }
 
+bool UInventoryComponent::TryStowItem(UItemData* ItemToStow)
+{
+    if (!ItemToStow) return false;
+
+    // RULE 1: Backpacks ONLY go to the Spine.
+    if (ItemToStow->ItemType == EItemType::Backpack)
+    {
+        if (BackpackSlot.IsEmpty())
+        {
+            BackpackSlot.ContainedItem = ItemToStow;
+            OnInventoryUpdated.Broadcast();
+            return true;
+        }
+        return false; // Back is full, cannot stow to belt/holsters.
+    }
+
+    // RULE 2: Weapons ONLY go to Holsters.
+    if (ItemToStow->ItemType == EItemType::Weapon)
+    {
+        if (PrimaryHolster.IsEmpty())
+        {
+            PrimaryHolster.ContainedItem = ItemToStow;
+            OnInventoryUpdated.Broadcast();
+            return true;
+        }
+        if (SidearmHolster.IsEmpty())
+        {
+            SidearmHolster.ContainedItem = ItemToStow;
+            OnInventoryUpdated.Broadcast();
+            return true;
+        }
+        return false; // Holsters full, cannot stow to belt.
+    }
+
+    // RULE 3: Tools & Consumables go to the Belt.
+    if (ItemToStow->ItemType == EItemType::Tool || ItemToStow->ItemType == EItemType::Consumable)
+    {
+        int32 EmptySlot = GetFirstEmptyBeltSlot();
+        if (EmptySlot != INDEX_NONE)
+        {
+            ToolbeltSlots[EmptySlot].ContainedItem = ItemToStow;
+            OnInventoryUpdated.Broadcast();
+            return true;
+        }
+    }
+
+    return false; // Nowhere valid to put it!
+}
+
+void UInventoryComponent::TryPickupItem(UItemData* NewItem, bool bAltPressed)
+{
+    if (!NewItem) return;
+
+    bool bTargetRight = false;
+
+    // --- BACKPACK PREFERENCE LOGIC ---
+    if (NewItem->ItemType == EItemType::Backpack)
+    {
+        if (RightHand.IsEmpty()) 
+        {
+            bTargetRight = true;  // Backpack prefers RIGHT hand
+        }
+        else if (LeftHand.IsEmpty())
+        {
+            bTargetRight = false;  // RIGHT full, go to LEFT
+        }
+        else 
+        {
+            // Both hands full, force to RIGHT hand
+            bTargetRight = true;
+        }
+    }
+    else
+    {
+        // Standard Logic: Weapons prefer Right, Tools/Consumables prefer Left
+        bTargetRight = (NewItem->ItemType == EItemType::Weapon);
+    }
+
+    // Alt key (bAltPressed) flips the final decision
+    if (bAltPressed) bTargetRight = !bTargetRight;
+
+    FInventorySlot& TargetHand = bTargetRight ? RightHand : LeftHand;
+
+    // If the target hand is full, try to stow the current item first
+    if (!TargetHand.IsEmpty())
+    {
+        // This call uses the strict guardrails we defined in TryStowItem
+        if (TryStowItem(TargetHand.ContainedItem))
+        {
+            TargetHand.ContainedItem = nullptr;
+        }
+        else
+        {
+            // If stow fails, the hand is cleared here so the new item can be picked up.
+            // Note: The physical drop logic should be handled in BP before this call.
+            TargetHand.ContainedItem = nullptr;
+        }
+    }
+
+    TargetHand.ContainedItem = NewItem;
+    OnInventoryUpdated.Broadcast();
+}
+
 void UInventoryComponent::QuickStowToBackpack(UBackpackComponent* ActiveBackpack)
 {
     if (!ActiveBackpack) return;
 
-    // 1. Identify which hand has the backpack and which has the item
+    // Find which hand ISN'T holding the backpack
     FInventorySlot* ItemSlot = nullptr;
 
     if (RightHand.ContainedItem && RightHand.ContainedItem->ItemType == EItemType::Backpack)
@@ -34,7 +137,6 @@ void UInventoryComponent::QuickStowToBackpack(UBackpackComponent* ActiveBackpack
         ItemSlot = &RightHand;
     }
 
-    // 2. If we found an item hand, try to move it to the backpack
     if (ItemSlot && !ItemSlot->IsEmpty())
     {
         if (ActiveBackpack->TryAddItem(ItemSlot->ContainedItem))
@@ -43,34 +145,6 @@ void UInventoryComponent::QuickStowToBackpack(UBackpackComponent* ActiveBackpack
             OnInventoryUpdated.Broadcast();
         }
     }
-}
-
-void UInventoryComponent::TryPickupItem(UItemData* NewItem, bool bAltPressed)
-{
-    if (!NewItem) return;
-
-    // 1. Determine Default Hand Priority
-    // Weapons -> Right (true), Everything else -> Left (false)
-    bool bTargetRight = (NewItem->ItemType == EItemType::Weapon);
-
-    // 2. Apply Alt Override
-    if (bAltPressed) bTargetRight = !bTargetRight;
-
-    FInventorySlot& TargetHand = bTargetRight ? RightHand : LeftHand;
-
-    // 3. If the hand is full, try to STOW the current item to its valid home
-    if (!TargetHand.IsEmpty())
-    {
-        // Try to find a place for the item currently in hand
-        bool bStowed = TryStowItem(TargetHand.ContainedItem);
-
-        // If we couldn't stow it (full inventory), we overwrite it (effectively dropping/replacing it)
-        TargetHand.ContainedItem = nullptr;
-    }
-
-    // 4. Place new item in hand
-    TargetHand.ContainedItem = NewItem;
-    OnInventoryUpdated.Broadcast();
 }
 
 void UInventoryComponent::ToggleHolster(bool bIsPrimary, bool bAltPressed)
@@ -117,43 +191,31 @@ void UInventoryComponent::ToggleHolster(bool bIsPrimary, bool bAltPressed)
     OnInventoryUpdated.Broadcast();
 }
 
-bool UInventoryComponent::TryStowItem(UItemData* ItemToStow)
-{
-    if (!ItemToStow) return false;
-
-    // RULE: Weapons go to Holsters
-    if (ItemToStow->ItemType == EItemType::Weapon)
-    {
-        if (PrimaryHolster.IsEmpty()) { PrimaryHolster.ContainedItem = ItemToStow; return true; }
-        if (SidearmHolster.IsEmpty()) { SidearmHolster.ContainedItem = ItemToStow; return true; }
-    }
-    // RULE: Tools/Consumables go to Belt
-    else
-    {
-        int32 Slot = GetFirstEmptyBeltSlot();
-        if (Slot != INDEX_NONE)
-        {
-            ToolbeltSlots[Slot].ContainedItem = ItemToStow;
-            return true;
-        }
-    }
-
-    return false; // Nowhere to put it!
-}
-
 void UInventoryComponent::SwapHandWithBelt(int32 BeltIndex, bool bAltPressed)
 {
     if (!ToolbeltSlots.IsValidIndex(BeltIndex)) return;
 
-    // Items from belt prefer Left Hand unless Alt is held
+    // Logic: No Alt = Left Hand, Alt = Right Hand
     FInventorySlot& TargetHand = bAltPressed ? RightHand : LeftHand;
-
-    // Strict Rule: Don't let a weapon accidentally be swapped into the belt via this function
-    if (!TargetHand.IsEmpty() && TargetHand.ContainedItem->ItemType == EItemType::Weapon)
+    
+    // GUARDRAIL: Block weapons and backpacks from entering the toolbelt
+    if (TargetHand.ContainedItem)
     {
-        // If right hand has a weapon, we must stow the weapon properly first
-        TryStowItem(TargetHand.ContainedItem);
-        TargetHand.ContainedItem = nullptr;
+        EItemType Type = TargetHand.ContainedItem->ItemType;
+        if (Type == EItemType::Weapon || Type == EItemType::Backpack)
+        {
+            return; // Prevent swap if hand contains weapon or backpack
+        }
+    }
+
+    // Safety check for the item currently in the belt (should never be a weapon/backpack anyway)
+    if (ToolbeltSlots[BeltIndex].ContainedItem)
+    {
+        EItemType BeltType = ToolbeltSlots[BeltIndex].ContainedItem->ItemType;
+        if (BeltType == EItemType::Weapon || BeltType == EItemType::Backpack)
+        {
+            return; // Prevent swap if belt contains weapon or backpack
+        }
     }
 
     UItemData* Temp = TargetHand.ContainedItem;

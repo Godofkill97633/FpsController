@@ -72,6 +72,12 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Inventory")
     void TryPickupItem(UItemData* NewItem, bool bAltPressed);
 
+    /** Smart Stow: Automatically finds the correct home (Holster vs Belt vs Spine) for an item.
+     * Now BlueprintCallable so it can be used in Blueprint scripts!
+     */
+    UFUNCTION(BlueprintCallable, Category = "Inventory")
+    bool TryStowItem(UItemData* ItemToStow);
+
     /** Only allows Weapons to be holstered. */
     UFUNCTION(BlueprintCallable, Category = "Inventory")
     void ToggleHolster(bool bIsPrimary, bool bAltPressed);
@@ -81,8 +87,6 @@ public:
     void SwapHandWithBelt(int32 BeltIndex, bool bAltPressed);
 
 protected:
-    /** Smart Stow: Automatically finds the correct home (Holster vs Belt) for an item */
-    bool TryStowItem(UItemData* ItemToStow);
     int32 GetFirstEmptyBeltSlot() const;
     bool HasEmptyWeaponHolster() const;
 };
