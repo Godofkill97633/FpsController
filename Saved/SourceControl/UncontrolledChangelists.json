@@ -6,7 +6,11 @@
 			"description": "Default Uncontrolled Changelist",
 			"files": [
 				"C:/Unreal Projects/FpsController/Content/Inventory/Blueprints/BP_PickupBase.uasset",
-				"C:/Unreal Projects/FpsController/Content/ThirdPerson/Blueprints/BP_FirstPersonCharacter.uasset"
+				"C:/Unreal Projects/FpsController/Content/ThirdPerson/Blueprints/BP_FirstPersonCharacter.uasset",
+				"C:/Unreal Projects/FpsController/Content/Inventory/TestWeaponData1.uasset",
+				"C:/Unreal Projects/FpsController/Content/__ExternalActors__/ThirdPerson/Lvl_ThirdPerson/3/1Q/RVGLP5SK15NWE3X7CFY4I8.uasset",
+				"C:/Unreal Projects/FpsController/Content/__ExternalActors__/ThirdPerson/Lvl_ThirdPerson/B/7P/90WGUT72IYM1HB6OZTQQM2.uasset",
+				"C:/Unreal Projects/FpsController/Content/__ExternalActors__/ThirdPerson/Lvl_ThirdPerson/E/R4/4KRX8KYOQLND6OTEUNG5F6.uasset"
 			]
 		}
 	]
