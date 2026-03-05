@@ -39,7 +39,7 @@ bool UInventoryComponent::TryStowItem(UItemData* ItemToStow)
         return false;
     }
 
-    // RULE 2: Weapons ONLY go to Holsters.
+    // Rule 2: Weapons to Holsters
     if (ItemToStow->ItemType == EItemType::Weapon)
     {
         if (PrimaryHolster.IsEmpty())
@@ -57,7 +57,7 @@ bool UInventoryComponent::TryStowItem(UItemData* ItemToStow)
         return false;
     }
 
-    // RULE 3: Tools & Consumables go to the Belt.
+    // Rule 3: Tools/Consumables to Belt
     if (ItemToStow->ItemType == EItemType::Tool || ItemToStow->ItemType == EItemType::Consumable)
     {
         int32 EmptySlot = GetFirstEmptyBeltSlot();
@@ -87,7 +87,7 @@ void UInventoryComponent::TryPickupItem(UItemData* NewItem, bool bAltPressed)
     // we use the empty hand to avoid unnecessary drops/stows.
     if (bTargetRight && !RightHand.IsEmpty() && LeftHand.IsEmpty())
     {
-        bTargetRight = false; 
+        bTargetRight = false;
     }
     else if (!bTargetRight && !LeftHand.IsEmpty() && RightHand.IsEmpty())
     {
@@ -190,18 +190,36 @@ void UInventoryComponent::SwapHandWithBelt(int32 BeltIndex, bool bAltPressed)
 {
     if (!ToolbeltSlots.IsValidIndex(BeltIndex)) return;
 
+    // Determine target hand based on Alt modifier
     FInventorySlot& TargetHand = bAltPressed ? RightHand : LeftHand;
 
-    if (TargetHand.ContainedItem)
+    if (!TargetHand.IsEmpty())
     {
         EItemType Type = TargetHand.ContainedItem->ItemType;
-        if (Type == EItemType::Weapon || Type == EItemType::Backpack) return;
+
+        // ISSUE FIX: If holding a Weapon or Backpack, we can't put it in a belt slot.
+        // We now attempt to auto-stow it to a holster/spine to make room for the belt item.
+        if (Type == EItemType::Weapon || Type == EItemType::Backpack)
+        {
+            if (TryStowItem(TargetHand.ContainedItem))
+            {
+                TargetHand.ContainedItem = nullptr;
+                // Success: Slot is now empty, proceeding to pull from belt.
+            }
+            else
+            {
+                // Fail: No room in holster/spine, so we cannot clear the hand to pull the belt item.
+                return;
+            }
+        }
     }
 
+    // Standard swap: handles tool-to-tool or empty-to-tool
     UItemData* Temp = TargetHand.ContainedItem;
     TargetHand.ContainedItem = ToolbeltSlots[BeltIndex].ContainedItem;
     ToolbeltSlots[BeltIndex].ContainedItem = Temp;
 
+    // Trigger UI refresh
     OnInventoryUpdated.Broadcast();
 }
 
