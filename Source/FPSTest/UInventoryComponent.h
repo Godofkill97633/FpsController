@@ -58,6 +58,13 @@ public:
 
     // --- FUNCTIONS ---
 
+    /** * HUD SYNC FIX: 
+     * Manually triggers the OnInventoryUpdated delegate.
+     * Call this in Blueprints whenever you manually empty a slot (like on Drop).
+     */
+    UFUNCTION(BlueprintCallable, Category = "Inventory")
+    void ForceUIUpdate();
+
     /** Swaps whatever is in the Left hand with the Right hand (X Key) */
     UFUNCTION(BlueprintCallable, Category = "Inventory")
     void SwapHands();

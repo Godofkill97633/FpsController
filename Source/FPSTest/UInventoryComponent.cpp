@@ -9,6 +9,11 @@ UInventoryComponent::UInventoryComponent()
     ToolbeltSlots.SetNum(4);
 }
 
+void UInventoryComponent::ForceUIUpdate()
+{
+    OnInventoryUpdated.Broadcast();
+}
+
 void UInventoryComponent::SwapHands()
 {
     UItemData* Temp = LeftHand.ContainedItem;
