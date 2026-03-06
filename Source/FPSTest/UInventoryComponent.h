@@ -7,7 +7,11 @@
 #include "UItemData.h"
 #include "UInventoryComponent.generated.h"
 
-// Define a slot to hold an item
+// Forward declaration of our new component
+class UBackpackComponent;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInventoryUpdated);
+
 USTRUCT(BlueprintType)
 struct FPSTEST_API FInventorySlot
 {
@@ -27,37 +31,69 @@ class FPSTEST_API UInventoryComponent : public UActorComponent
 public:
     UInventoryComponent();
 
-    // --- SLOTS ---
+    // --- HAND SLOTS ---
     UPROPERTY(BlueprintReadWrite, Category = "Inventory|Hands")
     FInventorySlot RightHand;
 
     UPROPERTY(BlueprintReadWrite, Category = "Inventory|Hands")
     FInventorySlot LeftHand;
 
+    // --- STORAGE SLOTS ---
     UPROPERTY(BlueprintReadWrite, Category = "Inventory|Holsters")
-    FInventorySlot PrimaryHolster; // Key 1
+    FInventorySlot PrimaryHolster;
 
     UPROPERTY(BlueprintReadWrite, Category = "Inventory|Holsters")
-    FInventorySlot SidearmHolster; // Key 2
+    FInventorySlot SidearmHolster;
 
     UPROPERTY(BlueprintReadWrite, Category = "Inventory|Belt")
-    TArray<FInventorySlot> ToolbeltSlots; // Keys 3-0
+    TArray<FInventorySlot> ToolbeltSlots;
+
+    /** This holds the 'Backpack Item' itself */
+    UPROPERTY(BlueprintReadWrite, Category = "Inventory|Backpack")
+    FInventorySlot BackpackSlot;
+
+    // --- EVENTS ---
+    UPROPERTY(BlueprintAssignable, Category = "Inventory")
+    FOnInventoryUpdated OnInventoryUpdated;
 
     // --- FUNCTIONS ---
 
-    /** Logic for picking up an item from the ground (F Key) */
+    /** * HUD SYNC FIX: 
+     * Manually triggers the OnInventoryUpdated delegate.
+     * Call this in Blueprints whenever you manually empty a slot (like on Drop).
+     */
     UFUNCTION(BlueprintCallable, Category = "Inventory")
-    void TryPickupItem(UItemData* NewItem);
+    void ForceUIUpdate();
 
-    /** Logic for swapping hand with a toolbelt slot (Keys 3-0) */
+    /** Swaps whatever is in the Left hand with the Right hand (X Key) */
     UFUNCTION(BlueprintCallable, Category = "Inventory")
-    void SwapHandWithBelt(int32 BeltIndex);
+    void SwapHands();
 
-    /** Logic for holstering weapon (Keys 1-2) */
+    /** Stows the item in the free hand into the held backpack (R Key) */
     UFUNCTION(BlueprintCallable, Category = "Inventory")
-    void ToggleHolster(bool bIsPrimary);
+    void QuickStowToBackpack(UBackpackComponent* ActiveBackpack);
+
+    /** * Contextual Pickup: Weapons prefer Right, Tools prefer Left.
+     * Enforces storage rules: Weapons to Holsters, Tools to Belt.
+     */
+    UFUNCTION(BlueprintCallable, Category = "Inventory")
+    void TryPickupItem(UItemData* NewItem, bool bAltPressed);
+
+    /** Smart Stow: Automatically finds the correct home (Holster vs Belt vs Spine) for an item.
+     * Now BlueprintCallable so it can be used in Blueprint scripts!
+     */
+    UFUNCTION(BlueprintCallable, Category = "Inventory")
+    bool TryStowItem(UItemData* ItemToStow);
+
+    /** Only allows Weapons to be holstered. */
+    UFUNCTION(BlueprintCallable, Category = "Inventory")
+    void ToggleHolster(bool bIsPrimary, bool bAltPressed);
+
+    /** Swaps hand item with belt (restricted to non-weapon items). */
+    UFUNCTION(BlueprintCallable, Category = "Inventory")
+    void SwapHandWithBelt(int32 BeltIndex, bool bAltPressed);
 
 protected:
-    // Helper to find empty belt space
     int32 GetFirstEmptyBeltSlot() const;
+    bool HasEmptyWeaponHolster() const;
 };
