@@ -52,6 +52,10 @@ public:
     UPROPERTY(BlueprintReadWrite, Category = "Inventory|Backpack")
     FInventorySlot BackpackSlot;
 
+    /** Selection state for Backpack Grid Navigation */
+    UPROPERTY(BlueprintReadWrite, Category = "Inventory|Backpack")
+    int32 BackpackSelectedIndex = 0;
+
     // --- EVENTS ---
     UPROPERTY(BlueprintAssignable, Category = "Inventory")
     FOnInventoryUpdated OnInventoryUpdated;
@@ -64,6 +68,14 @@ public:
      */
     UFUNCTION(BlueprintCallable, Category = "Inventory")
     void ForceUIUpdate();
+
+    /** Navigation Logic for Backpack Grid */
+    UFUNCTION(BlueprintCallable, Category = "Inventory|Backpack")
+    void NavigateBackpackGrid(int32 Delta, int32 Columns, bool bIs2D, int32 MaxItems);
+
+    /** The Dual-Purpose R Key Logic */
+    UFUNCTION(BlueprintCallable, Category = "Inventory|Backpack")
+    void HandleQuickAction(UBackpackComponent* BackpackComp);
 
     /** Swaps whatever is in the Left hand with the Right hand (X Key) */
     UFUNCTION(BlueprintCallable, Category = "Inventory")

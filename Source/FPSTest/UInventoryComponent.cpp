@@ -14,6 +14,82 @@ void UInventoryComponent::ForceUIUpdate()
     OnInventoryUpdated.Broadcast();
 }
 
+void UInventoryComponent::NavigateBackpackGrid(int32 Delta, int32 Columns, bool bIs2D, int32 MaxItems)
+{
+    if (MaxItems <= 0)
+    {
+        BackpackSelectedIndex = 0;
+        return;
+    }
+
+    if (bIs2D)
+    {
+        // 2D Grid navigation (Arrows)
+        // Logic handles Clamping to prevent going out of bounds
+        BackpackSelectedIndex = FMath::Clamp(BackpackSelectedIndex + Delta, 0, MaxItems - 1);
+    }
+    else
+    {
+        // 1D Linear navigation (Scroll Wheel)
+        // Logic handles Wrapping for a smoother feel
+        BackpackSelectedIndex += Delta;
+        if (BackpackSelectedIndex >= MaxItems) BackpackSelectedIndex = 0;
+        if (BackpackSelectedIndex < 0) BackpackSelectedIndex = MaxItems - 1;
+    }
+
+    // Notify HUD to update the selection highlight
+    OnInventoryUpdated.Broadcast();
+}
+
+void UInventoryComponent::HandleQuickAction(UBackpackComponent* BackpackComp)
+{
+    if (!BackpackComp) return;
+
+    // 1. Identify which hand is NOT holding the backpack
+    FInventorySlot* OtherHand = nullptr;
+
+    if (LeftHand.ContainedItem && LeftHand.ContainedItem->ItemType == EItemType::Backpack)
+    {
+        OtherHand = &RightHand;
+    }
+    else if (RightHand.ContainedItem && RightHand.ContainedItem->ItemType == EItemType::Backpack)
+    {
+        OtherHand = &LeftHand;
+    }
+
+    // Safety check: Ensure we found a free hand to interact with
+    if (!OtherHand) return;
+
+    if (!OtherHand->IsEmpty())
+    {
+        // QUICK STOW: Move item from free hand into the backpack
+        if (BackpackComp->TryAddItem(OtherHand->ContainedItem))
+        {
+            OtherHand->ContainedItem = nullptr;
+        }
+    }
+    else
+    {
+        // QUICK UNSTOW: Pull the currently selected item out of the backpack into hand
+        if (BackpackComp->StoredItems.IsValidIndex(BackpackSelectedIndex))
+        {
+            OtherHand->ContainedItem = BackpackComp->StoredItems[BackpackSelectedIndex];
+
+            // Remove from the bag array
+            BackpackComp->StoredItems.RemoveAt(BackpackSelectedIndex);
+
+            // Adjust selection index if we removed the last item in the list
+            if (BackpackSelectedIndex >= BackpackComp->StoredItems.Num() && BackpackSelectedIndex > 0)
+            {
+                BackpackSelectedIndex--;
+            }
+        }
+    }
+
+    // Refresh visuals and HUD
+    OnInventoryUpdated.Broadcast();
+}
+
 void UInventoryComponent::SwapHands()
 {
     UItemData* Temp = LeftHand.ContainedItem;
